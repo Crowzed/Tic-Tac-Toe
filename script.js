@@ -1,1 +1,501 @@
-const _0x524e01=_0x5141;(function(_0x539ec8,_0x730426){const _0x54b079=_0x5141,_0x347325=_0x539ec8();while(!![]){try{const _0x1d115c=parseInt(_0x54b079(0x21d))/0x1+-parseInt(_0x54b079(0x246))/0x2+-parseInt(_0x54b079(0x1f9))/0x3+parseInt(_0x54b079(0x23a))/0x4+-parseInt(_0x54b079(0x226))/0x5*(parseInt(_0x54b079(0x229))/0x6)+parseInt(_0x54b079(0x230))/0x7*(-parseInt(_0x54b079(0x21b))/0x8)+-parseInt(_0x54b079(0x209))/0x9*(-parseInt(_0x54b079(0x214))/0xa);if(_0x1d115c===_0x730426)break;else _0x347325['push'](_0x347325['shift']());}catch(_0x44aff8){_0x347325['push'](_0x347325['shift']());}}}(_0xdbe6,0xcb426));const WIN_CONDITION=0x5,AI_DEPTH_7=0x3,AI_DEPTH_13=0x2;let boardSize=0x7,board=[],currentPlayer='X',playerFirst=!![],gameActive=![],stats={'7x7_player':{'playerWins':0x0,'aiWins':0x0,'gamesPlayed':0x0},'7x7_ai':{'playerWins':0x0,'aiWins':0x0,'gamesPlayed':0x0},'13x13_player':{'playerWins':0x0,'aiWins':0x0,'gamesPlayed':0x0},'13x13_ai':{'playerWins':0x0,'aiWins':0x0,'gamesPlayed':0x0}};function loadStats(){const _0x50a65c=_0x5141,_0x2c6b90=localStorage[_0x50a65c(0x242)](_0x50a65c(0x1f3));if(_0x2c6b90){const _0x3d8ad8=JSON[_0x50a65c(0x219)](_0x2c6b90);Object[_0x50a65c(0x206)](stats,_0x3d8ad8);}}function saveStats(){const _0x152b7b=_0x5141;localStorage[_0x152b7b(0x208)](_0x152b7b(0x1f3),JSON['stringify'](stats));}function updateStatsUI(_0x5baf01){const _0x8f517=_0x5141;document['getElementById']('player-wins')['textContent']=_0x5baf01[_0x8f517(0x20f)],document[_0x8f517(0x1f8)](_0x8f517(0x225))[_0x8f517(0x228)]=_0x5baf01[_0x8f517(0x202)],document[_0x8f517(0x1f8)](_0x8f517(0x237))[_0x8f517(0x228)]=_0x5baf01['gamesPlayed'];}let currentModeKey='';function getModeKey(_0x2f32e5,_0x1438cc){return _0x2f32e5+'x'+_0x2f32e5+'_'+(_0x1438cc?'player':'ai');}function startGame(_0x349c64,_0x2a96e7){const _0x5b1416=_0x5141;boardSize=_0x349c64,playerFirst=_0x2a96e7,currentPlayer=_0x2a96e7?'X':'O',gameActive=!![],board=Array[_0x5b1416(0x20b)]({'length':boardSize},()=>Array(boardSize)[_0x5b1416(0x231)](null)),document[_0x5b1416(0x1f8)](_0x5b1416(0x1fb))[_0x5b1416(0x22a)][_0x5b1416(0x220)](_0x5b1416(0x23e)),document[_0x5b1416(0x1f8)](_0x5b1416(0x24f))[_0x5b1416(0x22a)][_0x5b1416(0x222)](_0x5b1416(0x23e)),document['getElementById'](_0x5b1416(0x223))[_0x5b1416(0x228)]=playerFirst?_0x5b1416(0x21a):_0x5b1416(0x1f5),currentModeKey=getModeKey(_0x349c64,_0x2a96e7),updateStatsUI(stats[currentModeKey]),renderBoard(),!playerFirst&&setTimeout(makeAIMove,0x1f4);}function renderBoard(){const _0x45fd94=_0x5141,_0x223dcb=document['getElementById'](_0x45fd94(0x20d));_0x223dcb[_0x45fd94(0x227)]='',_0x223dcb[_0x45fd94(0x204)]['gridTemplateColumns']=_0x45fd94(0x1fa)+boardSize+',\x20minmax(30px,\x201fr))';const _0x4c199e=boardSize>0xa?'text-2xl':'text-4xl';for(let _0x57b686=0x0;_0x57b686<boardSize;_0x57b686++){for(let _0x208575=0x0;_0x208575<boardSize;_0x208575++){const _0x5c92f4=document[_0x45fd94(0x1ee)]('div');_0x5c92f4[_0x45fd94(0x235)]=_0x45fd94(0x24d)+_0x4c199e,_0x5c92f4[_0x45fd94(0x207)][_0x45fd94(0x247)]=_0x57b686,_0x5c92f4['dataset']['col']=_0x208575,_0x5c92f4['id']=_0x45fd94(0x22b)+_0x57b686+'-'+_0x208575;const _0x375cc4=board[_0x57b686][_0x208575];_0x375cc4?(_0x5c92f4['textContent']=_0x375cc4,_0x5c92f4[_0x45fd94(0x22a)][_0x45fd94(0x220)](_0x375cc4==='X'?'text-blue-600':_0x45fd94(0x22d))):(_0x5c92f4[_0x45fd94(0x22a)][_0x45fd94(0x220)](_0x45fd94(0x1fd)),_0x5c92f4[_0x45fd94(0x1fe)](_0x45fd94(0x1f7),()=>handleCellClick(_0x57b686,_0x208575))),_0x223dcb[_0x45fd94(0x20e)](_0x5c92f4);}}}function highlightCell(_0x3fe4c1,_0x45119a){const _0x43ad33=_0x5141;document['querySelectorAll'](_0x43ad33(0x210))[_0x43ad33(0x22f)](_0x482492=>{const _0x2ed0a3=_0x43ad33;_0x482492['classList'][_0x2ed0a3(0x222)](_0x2ed0a3(0x217));});const _0x267de6=document[_0x43ad33(0x1f8)](_0x43ad33(0x22b)+_0x3fe4c1+'-'+_0x45119a);_0x267de6&&_0x267de6['classList'][_0x43ad33(0x220)]('last-move');}function handleCellClick(_0xd583a2,_0x1e29b8){const _0x2fa919=_0x5141;if(!gameActive||board[_0xd583a2][_0x1e29b8]||currentPlayer!=='X')return;board[_0xd583a2][_0x1e29b8]='X',renderBoard(),highlightCell(_0xd583a2,_0x1e29b8);if(checkWin('X')){endGame('You\x20win!\x20🎉');return;}else{if(isBoardFull()){endGame(_0x2fa919(0x1f4));return;}}currentPlayer='O',document[_0x2fa919(0x1f8)](_0x2fa919(0x223))[_0x2fa919(0x228)]=_0x2fa919(0x1f5),setTimeout(makeAIMove,0x1f4);}function endGame(_0xfadff4){const _0x4eedb4=_0x5141;gameActive=![],document[_0x4eedb4(0x1f8)](_0x4eedb4(0x223))['textContent']=_0xfadff4;const _0x115862=stats[currentModeKey];_0x115862[_0x4eedb4(0x22c)]++;if(_0xfadff4[_0x4eedb4(0x239)](_0x4eedb4(0x21e)))_0x115862['playerWins']++,showPopup(_0x4eedb4(0x233),_0x4eedb4(0x22e));else _0xfadff4['includes'](_0x4eedb4(0x203))?(_0x115862['aiWins']++,showPopup(_0x4eedb4(0x205),'red')):showPopup('It\x27s\x20a\x20Tie\x20😐',_0x4eedb4(0x23c));saveStats(),updateStatsUI(_0x115862);}function showPopup(_0x272e96,_0x52185c=_0x524e01(0x22e)){const _0x4a14c6=_0x524e01,_0x206d2c=document[_0x4a14c6(0x1f8)](_0x4a14c6(0x240)),_0xda7cbc=document[_0x4a14c6(0x1f8)]('popup-box'),_0x2121fb=document[_0x4a14c6(0x1f8)]('popup-message');_0x2121fb[_0x4a14c6(0x228)]=_0x272e96,_0x2121fb['className']='text-2xl\x20font-bold\x20mb-4\x20text-'+_0x52185c+_0x4a14c6(0x1f0),_0x206d2c[_0x4a14c6(0x22a)][_0x4a14c6(0x220)]('show'),_0xda7cbc[_0x4a14c6(0x22a)][_0x4a14c6(0x220)](_0x4a14c6(0x245)),generateParticles(_0x52185c);}function hidePopup(){const _0x2e3385=_0x524e01,_0x203260=document[_0x2e3385(0x1f8)](_0x2e3385(0x240)),_0x51f646=document[_0x2e3385(0x1f8)]('popup-box');_0x203260[_0x2e3385(0x22a)][_0x2e3385(0x222)]('show'),_0x51f646[_0x2e3385(0x22a)]['remove'](_0x2e3385(0x245)),showMainMenu();}function generateParticles(_0x43885b){const _0x325733=_0x524e01,_0x5cf568=document[_0x325733(0x1f8)]('popup-overlay');for(let _0x8b7d0c=0x0;_0x8b7d0c<0x1e;_0x8b7d0c++){const _0x2c1a4c=document[_0x325733(0x1ee)]('div');_0x2c1a4c[_0x325733(0x235)]='particle\x20bg-'+_0x43885b+_0x325733(0x21f),_0x2c1a4c[_0x325733(0x204)][_0x325733(0x212)]=_0x325733(0x21c),_0x2c1a4c['style'][_0x325733(0x236)]=_0x325733(0x21c);const _0x4e4904=Math['random']()*0x2*Math['PI'],_0x2e43c6=0x50+Math[_0x325733(0x238)]()*0x28;_0x2c1a4c['style'][_0x325733(0x224)](_0x325733(0x24e),Math[_0x325733(0x1fc)](_0x4e4904)*_0x2e43c6+'px'),_0x2c1a4c['style'][_0x325733(0x224)](_0x325733(0x234),Math['sin'](_0x4e4904)*_0x2e43c6+'px'),_0x5cf568[_0x325733(0x20e)](_0x2c1a4c),setTimeout(()=>_0x2c1a4c[_0x325733(0x222)](),0x2bc);}}function makeAIMove(){const _0x3bb14c=_0x524e01;if(!gameActive||currentPlayer!=='O')return;const _0x5b96cc=boardSize===0x7?AI_DEPTH_7:AI_DEPTH_13,_0x485fd2=getBestMoveMinimax(board,_0x5b96cc,!![]);if(_0x485fd2&&board[_0x485fd2[_0x3bb14c(0x247)]][_0x485fd2[_0x3bb14c(0x249)]]===null){board[_0x485fd2[_0x3bb14c(0x247)]][_0x485fd2[_0x3bb14c(0x249)]]='O',renderBoard(),highlightCell(_0x485fd2[_0x3bb14c(0x247)],_0x485fd2[_0x3bb14c(0x249)]);if(checkWin('O'))endGame(_0x3bb14c(0x241));else isBoardFull()?endGame(_0x3bb14c(0x1f4)):(currentPlayer='X',document['getElementById'](_0x3bb14c(0x223))['textContent']=_0x3bb14c(0x21a));}}function getBestMoveMinimax(_0x3159db,_0x5792fb,_0xc0950b){const _0x1ce144=_0x524e01;let _0xb18f0e=_0xc0950b?-Infinity:Infinity,_0xbc8441=[];const _0x45d955=getCandidateMoves(_0x3159db);for(const {row:_0x89eb4a,col:_0x5697de}of _0x45d955){_0x3159db[_0x89eb4a][_0x5697de]=_0xc0950b?'O':'X';const _0x29983a=minimax(_0x3159db,_0x5792fb-0x1,!_0xc0950b,-Infinity,Infinity);_0x3159db[_0x89eb4a][_0x5697de]=null;if(_0xc0950b){if(_0x29983a>_0xb18f0e)_0xb18f0e=_0x29983a,_0xbc8441=[{'row':_0x89eb4a,'col':_0x5697de}];else _0x29983a===_0xb18f0e&&_0xbc8441[_0x1ce144(0x20c)]({'row':_0x89eb4a,'col':_0x5697de});}else{if(_0x29983a<_0xb18f0e)_0xb18f0e=_0x29983a,_0xbc8441=[{'row':_0x89eb4a,'col':_0x5697de}];else _0x29983a===_0xb18f0e&&_0xbc8441[_0x1ce144(0x20c)]({'row':_0x89eb4a,'col':_0x5697de});}}if(_0xbc8441[_0x1ce144(0x1f6)]>0x0)return _0xbc8441[Math[_0x1ce144(0x1f2)](Math[_0x1ce144(0x238)]()*_0xbc8441['length'])];return null;}function minimax(_0x1e0ed6,_0x224b6a,_0xdff535,_0x366111,_0x33f382){const _0x4b8343=_0x524e01;if(evaluateWinner(_0x1e0ed6,'O'))return 0x186a0;if(evaluateWinner(_0x1e0ed6,'X'))return-0x186a0;if(isBoardFull()||_0x224b6a===0x0)return evaluateBoard(_0x1e0ed6);const _0x2b0f33=getCandidateMoves(_0x1e0ed6);if(_0xdff535){let _0x346bad=-Infinity;for(const {row:_0x35e786,col:_0x3385fa}of _0x2b0f33){_0x1e0ed6[_0x35e786][_0x3385fa]='O';const _0x1a48d2=minimax(_0x1e0ed6,_0x224b6a-0x1,![],_0x366111,_0x33f382);_0x1e0ed6[_0x35e786][_0x3385fa]=null,_0x346bad=Math['max'](_0x346bad,_0x1a48d2),_0x366111=Math[_0x4b8343(0x1f1)](_0x366111,_0x1a48d2);if(_0x33f382<=_0x366111)break;}return _0x346bad;}else{let _0x37223a=Infinity;for(const {row:_0x4660d2,col:_0x158ab0}of _0x2b0f33){_0x1e0ed6[_0x4660d2][_0x158ab0]='X';const _0x21796e=minimax(_0x1e0ed6,_0x224b6a-0x1,!![],_0x366111,_0x33f382);_0x1e0ed6[_0x4660d2][_0x158ab0]=null,_0x37223a=Math['min'](_0x37223a,_0x21796e),_0x33f382=Math[_0x4b8343(0x218)](_0x33f382,_0x21796e);if(_0x33f382<=_0x366111)break;}return _0x37223a;}}function evaluateWinner(_0x544600,_0x275270){return checkWin(_0x275270);}function checkWin(_0x2dd266){const _0x4f48f2=[[0x0,0x1],[0x1,0x0],[0x1,0x1],[0x1,-0x1]];for(let _0x8fdc93=0x0;_0x8fdc93<boardSize;_0x8fdc93++){for(let _0x44cd25=0x0;_0x44cd25<boardSize;_0x44cd25++){if(board[_0x8fdc93][_0x44cd25]!==_0x2dd266)continue;for(const [_0x19b3c5,_0x4b6fe0]of _0x4f48f2){let _0x4d34ba=!![];const _0x390541=[{'row':_0x8fdc93,'col':_0x44cd25}];for(let _0x1fcd92=0x1;_0x1fcd92<WIN_CONDITION;_0x1fcd92++){const _0x3c1f84=_0x8fdc93+_0x1fcd92*_0x19b3c5,_0x3f23fc=_0x44cd25+_0x1fcd92*_0x4b6fe0;if(_0x3c1f84<0x0||_0x3c1f84>=boardSize||_0x3f23fc<0x0||_0x3f23fc>=boardSize||board[_0x3c1f84][_0x3f23fc]!==_0x2dd266){_0x4d34ba=![];break;}_0x390541['push']({'row':_0x3c1f84,'col':_0x3f23fc});}if(_0x4d34ba)return _0x390541;}}}return null;}function highlightWinningCells(_0x4b91bb){const _0x1e34fd=_0x524e01;for(const {row:_0x20370a,col:_0x82055c}of _0x4b91bb){const _0x23a01e=document['getElementById'](_0x1e34fd(0x22b)+_0x20370a+'-'+_0x82055c);if(_0x23a01e)_0x23a01e['classList'][_0x1e34fd(0x220)](_0x1e34fd(0x24a));}}function evaluateBoard(_0x262f01){if(evaluateWinner(_0x262f01,'O'))return 0x186a0;if(evaluateWinner(_0x262f01,'X'))return-0x186a0;const _0x3c220f=scoreBoard(_0x262f01,'O'),_0x458c40=scoreBoard(_0x262f01,'X'),_0x3604af=countThreats(_0x262f01,'O'),_0x50c77a=countThreats(_0x262f01,'X');return _0x3c220f-_0x458c40+_0x3604af*0x1f4-_0x50c77a*0x190;}function _0x5141(_0x2b9405,_0x34012f){const _0xdbe676=_0xdbe6();return _0x5141=function(_0x514126,_0x89df6f){_0x514126=_0x514126-0x1ee;let _0x1b4b43=_0xdbe676[_0x514126];return _0x1b4b43;},_0x5141(_0x2b9405,_0x34012f);}function scoreBoard(_0x565776,_0x352bdd){const _0x1eae13=_0x524e01;let _0x484991=0x0;const _0x586cb4=[[0x0,0x1],[0x1,0x0],[0x1,0x1],[0x1,-0x1]],_0x3ef70b=_0x565776[_0x1eae13(0x1f6)];for(let _0x7a2526=0x0;_0x7a2526<_0x3ef70b;_0x7a2526++){for(let _0x1a57e8=0x0;_0x1a57e8<_0x3ef70b;_0x1a57e8++){for(const [_0x47854d,_0x1671af]of _0x586cb4){let _0x1e32da=0x0,_0x4cc956=0x0;for(let _0x1d9a5a=0x0;_0x1d9a5a<WIN_CONDITION;_0x1d9a5a++){const _0x31bd62=_0x7a2526+_0x47854d*_0x1d9a5a,_0x5c915d=_0x1a57e8+_0x1671af*_0x1d9a5a;if(_0x31bd62>=0x0&&_0x5c915d>=0x0&&_0x31bd62<_0x3ef70b&&_0x5c915d<_0x3ef70b){if(_0x565776[_0x31bd62][_0x5c915d]===_0x352bdd)_0x1e32da++;else{if(_0x565776[_0x31bd62][_0x5c915d]!==null)_0x4cc956++;}}else _0x4cc956++;}if(_0x1e32da===0x5)_0x484991+=0x2710;else{if(_0x1e32da===0x4&&_0x4cc956===0x0)_0x484991+=0x3e8;else{if(_0x1e32da===0x3&&_0x4cc956<=0x1)_0x484991+=0x64;else{if(_0x1e32da===0x2&&_0x4cc956<=0x1)_0x484991+=0xa;else{if(_0x1e32da===0x1&&_0x4cc956===0x0)_0x484991+=0x1;}}}}}}}return _0x484991;}function getCandidateMoves(_0x2af8f4){const _0x4ee3b9=_0x524e01,_0x46ebca=[],_0xf6c461=0x1,_0x1079da=_0x2af8f4[_0x4ee3b9(0x1f6)];for(let _0x2b6a1e=0x0;_0x2b6a1e<_0x1079da;_0x2b6a1e++){for(let _0x5aa3bf=0x0;_0x5aa3bf<_0x1079da;_0x5aa3bf++){if(_0x2af8f4[_0x2b6a1e][_0x5aa3bf]!==null)continue;let _0x401bdc=![];_0x51258e:for(let _0x763cf4=-_0xf6c461;_0x763cf4<=_0xf6c461;_0x763cf4++){for(let _0x20233b=-_0xf6c461;_0x20233b<=_0xf6c461;_0x20233b++){const _0x25fa1c=_0x2b6a1e+_0x763cf4,_0x7e9377=_0x5aa3bf+_0x20233b;if(_0x25fa1c>=0x0&&_0x7e9377>=0x0&&_0x25fa1c<_0x1079da&&_0x7e9377<_0x1079da&&_0x2af8f4[_0x25fa1c][_0x7e9377]!==null){_0x401bdc=!![];break _0x51258e;}}}if(_0x401bdc)_0x46ebca[_0x4ee3b9(0x20c)]({'row':_0x2b6a1e,'col':_0x5aa3bf});}}if(_0x46ebca[_0x4ee3b9(0x1f6)]===0x0){const _0x2ebbbc=Math[_0x4ee3b9(0x1f2)](_0x2af8f4[_0x4ee3b9(0x1f6)]/0x2);_0x46ebca[_0x4ee3b9(0x20c)]({'row':_0x2ebbbc,'col':_0x2ebbbc});}return _0x46ebca;}function isBoardFull(){const _0x3754f3=_0x524e01;return board[_0x3754f3(0x248)](_0x27dc59=>_0x27dc59['every'](_0x2ca00c=>_0x2ca00c!==null));}function countThreats(_0xee104,_0x4be7f3){const _0x28e4ea=_0x524e01;let _0x4cfbb1=0x0;const _0x59d428=[[0x0,0x1],[0x1,0x0],[0x1,0x1],[0x1,-0x1]],_0x2bb78a=_0xee104[_0x28e4ea(0x1f6)];for(let _0x12adc8=0x0;_0x12adc8<_0x2bb78a;_0x12adc8++){for(let _0x270d5b=0x0;_0x270d5b<_0x2bb78a;_0x270d5b++){if(_0xee104[_0x12adc8][_0x270d5b]!==null)continue;let _0x2c0d10=0x0;_0xee104[_0x12adc8][_0x270d5b]=_0x4be7f3;for(const [_0x38dd33,_0x54c252]of _0x59d428){let _0x3ba454='';for(let _0x142316=-0x4;_0x142316<=0x4;_0x142316++){const _0x28f7c9=_0x12adc8+_0x142316*_0x38dd33,_0x19255e=_0x270d5b+_0x142316*_0x54c252;_0x3ba454+=_0x28f7c9<0x0||_0x19255e<0x0||_0x28f7c9>=_0x2bb78a||_0x19255e>=_0x2bb78a?'\x20':_0xee104[_0x28f7c9][_0x19255e]||'.';}(_0x3ba454[_0x28e4ea(0x239)](''+_0x4be7f3+_0x4be7f3+_0x4be7f3+_0x4be7f3+'.')||_0x3ba454[_0x28e4ea(0x239)]('.'+_0x4be7f3+_0x4be7f3+_0x4be7f3+_0x4be7f3))&&_0x2c0d10++;}_0xee104[_0x12adc8][_0x270d5b]=null;if(_0x2c0d10>=0x2)_0x4cfbb1++;}}return _0x4cfbb1;}function restartGame(){startGame(boardSize,playerFirst);}function showMainMenu(){const _0x256802=_0x524e01;document[_0x256802(0x1f8)](_0x256802(0x1fb))[_0x256802(0x22a)]['remove'](_0x256802(0x23e)),document[_0x256802(0x1f8)](_0x256802(0x24f))[_0x256802(0x22a)]['add']('hidden');}function showAbout(){const _0x4ea330=_0x524e01;document[_0x4ea330(0x1f8)]('about-modal')[_0x4ea330(0x22a)]['remove'](_0x4ea330(0x23e));}function hideAbout(){const _0x3b9f0b=_0x524e01;document['getElementById']('about-modal')[_0x3b9f0b(0x22a)][_0x3b9f0b(0x220)](_0x3b9f0b(0x23e));}function showRestartConfirm(){const _0x4bbf00=_0x524e01;document[_0x4bbf00(0x1f8)](_0x4bbf00(0x213))[_0x4bbf00(0x22a)]['remove'](_0x4bbf00(0x23e));}function hideRestartConfirm(){const _0x203fee=_0x524e01;document['getElementById']('restart-modal')['classList'][_0x203fee(0x220)](_0x203fee(0x23e));}function showResetStatsConfirm(){const _0x5a563e=_0x524e01;document[_0x5a563e(0x1f8)]('reset-stats-modal')[_0x5a563e(0x22a)][_0x5a563e(0x222)](_0x5a563e(0x23e));}function _0xdbe6(){const _0x48612a=['row','every','col','winner-cell','application/json','tic_tac_toe_stats_export.json','cell\x20bg-white\x20flex\x20items-center\x20justify-center\x20','--dx','game-container','createElement','duration-300','-600','max','floor','tic_tac_toe_stats','It\x27s\x20a\x20tie!','AI\x20is\x20thinking...','length','click','getElementById','1940625ZaXBxp','repeat(','main-menu','cos','cursor-pointer','addEventListener','stringify','href','opacity-0','aiWins','AI\x20wins','style','You\x20Lose!\x20💀','assign','dataset','setItem','861093IrJhur','DOMContentLoaded','from','push','board','appendChild','playerWins','.cell','reset-stats-modal','left','restart-modal','190aDKdjs','map','download','last-move','min','parse','Your\x20turn\x20(X)','42728guWVkQ','50%','280737zOxKTK','You\x20win','-500','add','encode','remove','game-status','setProperty','ai-wins','130150EHCdLf','innerHTML','textContent','96cKkuoa','classList','cell-','gamesPlayed','text-red-600','blue','forEach','91RxxDZW','fill','btn-13x13','You\x20Win!\x20🎉','--dy','className','top','games-played','random','includes','862084BnBppm','padStart','gray','btn-13x13-ai','hidden','btn-about','popup-overlay','AI\x20wins!\x20🤖','getItem','All\x20stats\x20have\x20been\x20reset.','join','show','697566sfJlFl'];_0xdbe6=function(){return _0x48612a;};return _0xdbe6();}function hideResetStatsConfirm(){const _0x34483b=_0x524e01;document[_0x34483b(0x1f8)](_0x34483b(0x211))[_0x34483b(0x22a)][_0x34483b(0x220)](_0x34483b(0x23e));}function confirmResetStats(){const _0x1f35fa=_0x524e01;stats={'7x7_player':{'playerWins':0x0,'aiWins':0x0,'gamesPlayed':0x0},'7x7_ai':{'playerWins':0x0,'aiWins':0x0,'gamesPlayed':0x0},'13x13_player':{'playerWins':0x0,'aiWins':0x0,'gamesPlayed':0x0},'13x13_ai':{'playerWins':0x0,'aiWins':0x0,'gamesPlayed':0x0}},saveStats();if(currentModeKey)updateStatsUI(stats[currentModeKey]);hideResetStatsConfirm(),alert(_0x1f35fa(0x243));}async function exportStats(){const _0x9ba028=_0x524e01,_0x1aef80=new TextEncoder(),_0x2933fb='SuperSecretSalt123!',_0x3f9241=JSON['stringify'](stats),_0x2b407f=_0x1aef80[_0x9ba028(0x221)](_0x3f9241+_0x2933fb),_0x2f76f6=await crypto['subtle']['digest']('SHA-256',_0x2b407f),_0x495ee0=Array[_0x9ba028(0x20b)](new Uint8Array(_0x2f76f6)),_0x34d231=_0x495ee0[_0x9ba028(0x215)](_0x2bd463=>_0x2bd463['toString'](0x10)[_0x9ba028(0x23b)](0x2,'0'))[_0x9ba028(0x244)](''),_0x5bc926={'stats':stats,'hash':_0x34d231},_0x1a17bb=new Blob([JSON[_0x9ba028(0x1ff)](_0x5bc926,null,0x2)],{'type':_0x9ba028(0x24b)}),_0x1575dd=URL['createObjectURL'](_0x1a17bb),_0x3760df=document[_0x9ba028(0x1ee)]('a');_0x3760df[_0x9ba028(0x200)]=_0x1575dd,_0x3760df[_0x9ba028(0x216)]=_0x9ba028(0x24c),_0x3760df['click'](),URL['revokeObjectURL'](_0x1575dd);}function confirmRestart(){const _0x1ff5c0=_0x524e01;hideRestartConfirm();const _0x2e6bbc=document[_0x1ff5c0(0x1f8)](_0x1ff5c0(0x24f));_0x2e6bbc[_0x1ff5c0(0x22a)]['add'](_0x1ff5c0(0x201),'transition-opacity',_0x1ff5c0(0x1ef)),setTimeout(()=>{const _0x48f82f=_0x1ff5c0;restartGame(),_0x2e6bbc[_0x48f82f(0x22a)][_0x48f82f(0x222)](_0x48f82f(0x201));},0x12c);}document['addEventListener'](_0x524e01(0x20a),()=>{const _0x348d08=_0x524e01;loadStats(),document[_0x348d08(0x1f8)]('btn-7x7')[_0x348d08(0x1fe)](_0x348d08(0x1f7),()=>startGame(0x7,!![])),document[_0x348d08(0x1f8)]('btn-7x7-ai')[_0x348d08(0x1fe)]('click',()=>startGame(0x7,![])),document[_0x348d08(0x1f8)](_0x348d08(0x232))['addEventListener'](_0x348d08(0x1f7),()=>startGame(0xd,!![])),document['getElementById'](_0x348d08(0x23d))[_0x348d08(0x1fe)](_0x348d08(0x1f7),()=>startGame(0xd,![])),document[_0x348d08(0x1f8)](_0x348d08(0x23f))[_0x348d08(0x1fe)](_0x348d08(0x1f7),showAbout);});
+const WIN_CONDITION = 5;
+const AI_DEPTH_7 = 3;
+const AI_DEPTH_13 = 2;
+
+let boardSize = 7;
+let board = [];
+let currentPlayer = 'X';
+let playerFirst = true;
+let gameActive = false;
+
+let stats = {
+  "7x7_player": { playerWins: 0, aiWins: 0, gamesPlayed: 0 },
+  "7x7_ai":     { playerWins: 0, aiWins: 0, gamesPlayed: 0 },
+  "13x13_player": { playerWins: 0, aiWins: 0, gamesPlayed: 0 },
+  "13x13_ai":     { playerWins: 0, aiWins: 0, gamesPlayed: 0 }
+};
+
+function loadStats() {
+  const saved = localStorage.getItem("tic_tac_toe_stats");
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    Object.assign(stats, parsed);
+  }
+}
+
+function saveStats() {
+  localStorage.setItem("tic_tac_toe_stats", JSON.stringify(stats));
+}
+
+function updateStatsUI(s) {
+  document.getElementById('player-wins').textContent = s.playerWins;
+  document.getElementById('ai-wins').textContent = s.aiWins;
+  document.getElementById('games-played').textContent = s.gamesPlayed;
+}
+
+let currentModeKey = "";
+
+function getModeKey(size, playerFirst) {
+  return `${size}x${size}_${playerFirst ? 'player' : 'ai'}`;
+}
+
+function startGame(size, isPlayerFirst) {
+  boardSize = size;
+  playerFirst = isPlayerFirst;
+  currentPlayer = isPlayerFirst ? 'X' : 'O';
+  gameActive = true;
+  board = Array.from({ length: boardSize }, () => Array(boardSize).fill(null));
+
+  document.getElementById('main-menu').classList.add('hidden');
+  document.getElementById('game-container').classList.remove('hidden');
+  document.getElementById('game-status').textContent = playerFirst ? 'Your turn (X)' : 'AI is thinking...';
+
+  currentModeKey = getModeKey(size, isPlayerFirst);
+  updateStatsUI(stats[currentModeKey]);
+  renderBoard();
+
+  if (!playerFirst) {
+    setTimeout(makeAIMove, 500);
+  }
+}
+
+function renderBoard() {
+  const boardElement = document.getElementById('board');
+  boardElement.innerHTML = '';
+  boardElement.style.gridTemplateColumns = `repeat(${boardSize}, minmax(30px, 1fr))`;
+
+  const textSize = boardSize > 10 ? 'text-2xl' : 'text-4xl';
+  
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      const cell = document.createElement('div');
+      cell.className = `cell bg-white flex items-center justify-center ${textSize}`;
+      cell.dataset.row = i;
+      cell.dataset.col = j;
+      cell.id = `cell-${i}-${j}`;
+      const val = board[i][j];
+      if (val) {
+        cell.textContent = val;
+        cell.classList.add(val === 'X' ? 'text-blue-600' : 'text-red-600');
+      } else {
+        cell.classList.add('cursor-pointer');
+        cell.addEventListener('click', () => handleCellClick(i, j));
+      }
+
+      boardElement.appendChild(cell);
+    }
+  }
+}
+function highlightCell(row, col) {
+  document.querySelectorAll('.cell').forEach(cell => {
+    cell.classList.remove('last-move');
+  });
+  const cell = document.getElementById(`cell-${row}-${col}`);
+  if (cell) {
+    cell.classList.add('last-move');
+  }
+}
+
+function handleCellClick(row, col) {
+  if (!gameActive || board[row][col] || currentPlayer !== 'X') return;
+  board[row][col] = 'X';
+  renderBoard();
+  highlightCell(row, col);
+
+  if (checkWin('X')) {
+    endGame('You win! 🎉');
+    return;
+  } else if (isBoardFull()) {
+    endGame("It's a tie!");
+    return;
+  }
+
+  currentPlayer = 'O';
+  document.getElementById('game-status').textContent = 'AI is thinking...';
+  setTimeout(makeAIMove, 500);
+}
+
+function endGame(message) {
+  gameActive = false;
+  document.getElementById('game-status').textContent = message;
+
+  const s = stats[currentModeKey];
+  s.gamesPlayed++;
+  if (message.includes('You win')) {
+    s.playerWins++;
+    showPopup("You Win! 🎉", 'blue');
+  }
+  else if (message.includes('AI wins')) {
+    s.aiWins++;
+    showPopup("You Lose! 💀", 'red');
+  }
+  else {
+    showPopup("It's a Tie 😐", 'gray');
+  }
+
+  saveStats();
+  updateStatsUI(s);
+}
+
+
+function showPopup(message, color = 'blue') {
+  const overlay = document.getElementById('popup-overlay');
+  const box = document.getElementById('popup-box');
+  const msg = document.getElementById('popup-message');
+
+  msg.textContent = message;
+  msg.className = `text-2xl font-bold mb-4 text-${color}-600`;
+  overlay.classList.add('show');
+  box.classList.add('show');
+
+  generateParticles(color);
+}
+
+function hidePopup() {
+  const overlay = document.getElementById('popup-overlay');
+  const box = document.getElementById('popup-box');
+  overlay.classList.remove('show');
+  box.classList.remove('show');
+  showMainMenu();
+}
+
+function generateParticles(color) {
+  const overlay = document.getElementById('popup-overlay');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = `particle bg-${color}-500`;
+    p.style.left = '50%';
+    p.style.top = '50%';
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = 80 + Math.random() * 40;
+    p.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
+    p.style.setProperty('--dy', `${Math.sin(angle) * distance}px`);
+    overlay.appendChild(p);
+    setTimeout(() => p.remove(), 700);
+  }
+}
+
+
+
+function makeAIMove() {
+  if (!gameActive || currentPlayer !== 'O') return;
+
+  const depth = boardSize === 7 ? AI_DEPTH_7 : AI_DEPTH_13;
+  const move = getBestMoveMinimax(board, depth, true);
+
+  if (move && board[move.row][move.col] === null) {
+    board[move.row][move.col] = 'O';
+    renderBoard();
+    highlightCell(move.row, move.col);
+
+    if (checkWin('O')) {
+      endGame('AI wins! 🤖');
+    } else if (isBoardFull()) {
+      endGame("It's a tie!");
+    } else {
+      currentPlayer = 'X';
+      document.getElementById('game-status').textContent = 'Your turn (X)';
+    }
+  }
+}
+
+function getBestMoveMinimax(currentBoard, depth, isMaximizing) {
+  let bestScore = isMaximizing ? -Infinity : Infinity;
+  let bestMoves = [];
+  const moves = getCandidateMoves(currentBoard);
+
+  for (const { row, col } of moves) {
+    currentBoard[row][col] = isMaximizing ? 'O' : 'X';
+    const score = minimax(currentBoard, depth - 1, !isMaximizing, -Infinity, Infinity);
+    currentBoard[row][col] = null;
+
+    if (isMaximizing) {
+      if (score > bestScore) {
+        bestScore = score;
+        bestMoves = [{ row, col }];
+      } else if (score === bestScore) {
+        bestMoves.push({ row, col });
+      }
+    } else {
+      if (score < bestScore) {
+        bestScore = score;
+        bestMoves = [{ row, col }];
+      } else if (score === bestScore) {
+        bestMoves.push({ row, col });
+      }
+    }
+  }
+
+  if (bestMoves.length > 0) {
+    return bestMoves[Math.floor(Math.random() * bestMoves.length)];
+  }
+
+  return null;
+}
+
+
+function minimax(board, depth, isMaximizing, alpha, beta) {
+  if (evaluateWinner(board, 'O')) return 100000; // kemenangan AI mutlak
+  if (evaluateWinner(board, 'X')) return -100000; // kekalahan AI mutlak
+  if (isBoardFull() || depth === 0) return evaluateBoard(board);
+
+  const moves = getCandidateMoves(board);
+
+  if (isMaximizing) {
+    let maxEval = -Infinity;
+    for (const { row, col } of moves) {
+      board[row][col] = 'O';
+      const eval = minimax(board, depth - 1, false, alpha, beta);
+      board[row][col] = null;
+      maxEval = Math.max(maxEval, eval);
+      alpha = Math.max(alpha, eval);
+      if (beta <= alpha) break;
+    }
+    return maxEval;
+  } else {
+    let minEval = Infinity;
+    for (const { row, col } of moves) {
+      board[row][col] = 'X';
+      const eval = minimax(board, depth - 1, true, alpha, beta);
+      board[row][col] = null;
+      minEval = Math.min(minEval, eval);
+      beta = Math.min(beta, eval);
+      if (beta <= alpha) break;
+    }
+    return minEval;
+  }
+}
+
+function evaluateWinner(b, player) {
+  return checkWin(player);
+}
+
+function checkWin(player) {
+  const directions = [[0, 1], [1, 0], [1, 1], [1, -1]];
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      if (board[i][j] !== player) continue;
+
+      for (const [dx, dy] of directions) {
+        let win = true;
+        const positions = [{ row: i, col: j }];
+
+        for (let k = 1; k < WIN_CONDITION; k++) {
+          const x = i + k * dx, y = j + k * dy;
+          if (x < 0 || x >= boardSize || y < 0 || y >= boardSize || board[x][y] !== player) {
+            win = false;
+            break;
+          }
+          positions.push({ row: x, col: y });
+        }
+
+        if (win) return positions;
+      }
+    }
+  }
+  return null;
+}
+function highlightWinningCells(cells) {
+  for (const { row, col } of cells) {
+    const cell = document.getElementById(`cell-${row}-${col}`);
+    if (cell) cell.classList.add('winner-cell');
+  }
+}
+
+
+function evaluateBoard(board) {
+  if (evaluateWinner(board, 'O')) return 100000;
+  if (evaluateWinner(board, 'X')) return -100000;
+
+  const aiScore = scoreBoard(board, 'O');
+  const playerScore = scoreBoard(board, 'X');
+  const aiThreats = countThreats(board, 'O');
+  const playerThreats = countThreats(board, 'X');
+
+  return aiScore - playerScore + (aiThreats * 500) - (playerThreats * 400);
+}
+
+function scoreBoard(board, player) {
+  let score = 0;
+  const directions = [[0, 1], [1, 0], [1, 1], [1, -1]];
+  const max = board.length;
+
+  for (let i = 0; i < max; i++) {
+    for (let j = 0; j < max; j++) {
+      for (const [dx, dy] of directions) {
+        let count = 0, blocked = 0;
+        for (let k = 0; k < WIN_CONDITION; k++) {
+          const x = i + dx * k, y = j + dy * k;
+          if (x >= 0 && y >= 0 && x < max && y < max) {
+            if (board[x][y] === player) count++;
+            else if (board[x][y] !== null) blocked++;
+          } else blocked++;
+        }
+
+        if (count === 5) score += 10000;
+        else if (count === 4 && blocked === 0) score += 1000;
+        else if (count === 3 && blocked <= 1) score += 100;
+        else if (count === 2 && blocked <= 1) score += 10;
+        else if (count === 1 && blocked === 0) score += 1;
+      }
+    }
+  }
+  return score;
+}
+
+function getCandidateMoves(board) {
+  const moves = [];
+  const range = 1;
+  const max = board.length;
+
+  for (let i = 0; i < max; i++) {
+    for (let j = 0; j < max; j++) {
+      if (board[i][j] !== null) continue;
+
+      let hasNeighbor = false;
+      outer: for (let di = -range; di <= range; di++) {
+        for (let dj = -range; dj <= range; dj++) {
+          const ni = i + di, nj = j + dj;
+          if (ni >= 0 && nj >= 0 && ni < max && nj < max && board[ni][nj] !== null) {
+            hasNeighbor = true;
+            break outer;
+          }
+        }
+      }
+
+      if (hasNeighbor) moves.push({ row: i, col: j });
+    }
+  }
+
+  if (moves.length === 0) {
+    const center = Math.floor(board.length / 2);
+    moves.push({ row: center, col: center });
+  }
+
+  return moves;
+}
+
+function isBoardFull() {
+  return board.every(row => row.every(cell => cell !== null));
+}
+
+function countThreats(board, player) {
+  let count = 0;
+  const directions = [[0,1],[1,0],[1,1],[1,-1]];
+  const max = board.length;
+
+  for (let i = 0; i < max; i++) {
+    for (let j = 0; j < max; j++) {
+      if (board[i][j] !== null) continue;
+
+      let threats = 0;
+      board[i][j] = player;
+
+      for (const [dx, dy] of directions) {
+        let line = '';
+        for (let k = -4; k <= 4; k++) {
+          const x = i + k * dx;
+          const y = j + k * dy;
+          line += (x < 0 || y < 0 || x >= max || y >= max) ? ' ' : (board[x][y] || '.');
+        }
+
+        if (line.includes(`${player}${player}${player}${player}.`) || line.includes(`.${player}${player}${player}${player}`)) {
+          threats++;
+        }
+      }
+
+      board[i][j] = null;
+      if (threats >= 2) count++;
+    }
+  }
+
+  return count;
+}
+function restartGame() {
+  startGame(boardSize, playerFirst);
+}
+
+// UI Controls
+function showMainMenu() {
+  document.getElementById('main-menu').classList.remove('hidden');
+  document.getElementById('game-container').classList.add('hidden');
+}
+
+function showAbout() {
+  document.getElementById('about-modal').classList.remove('hidden');
+}
+
+function hideAbout() {
+  document.getElementById('about-modal').classList.add('hidden');
+}
+function showRestartConfirm() {
+  document.getElementById('restart-modal').classList.remove('hidden');
+}
+
+function hideRestartConfirm() {
+  document.getElementById('restart-modal').classList.add('hidden');
+}
+function showResetStatsConfirm() {
+  document.getElementById('reset-stats-modal').classList.remove('hidden');
+}
+
+function hideResetStatsConfirm() {
+  document.getElementById('reset-stats-modal').classList.add('hidden');
+}
+
+function confirmResetStats() {
+  stats = {
+    "7x7_player": { playerWins: 0, aiWins: 0, gamesPlayed: 0 },
+    "7x7_ai":     { playerWins: 0, aiWins: 0, gamesPlayed: 0 },
+    "13x13_player": { playerWins: 0, aiWins: 0, gamesPlayed: 0 },
+    "13x13_ai":     { playerWins: 0, aiWins: 0, gamesPlayed: 0 }
+  };
+  saveStats();
+  if (currentModeKey) updateStatsUI(stats[currentModeKey]);
+  hideResetStatsConfirm();
+  alert("All stats have been reset.");
+}
+async function exportStats() {
+  const encoder = new TextEncoder();
+  const salt = 'SuperSecretSalt123!'; // Jangan ubah ini kalau mau validasi ulang
+  const jsonData = JSON.stringify(stats);
+  const data = encoder.encode(jsonData + salt);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+  const output = {
+    stats,
+    hash: hashHex
+  };
+
+  const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'tic_tac_toe_stats_export.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function confirmRestart() {
+  hideRestartConfirm();
+  // animasi fade-out board
+  const gameContainer = document.getElementById('game-container');
+  gameContainer.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+  
+  setTimeout(() => {
+    restartGame();
+    gameContainer.classList.remove('opacity-0');
+  }, 300);
+}
+
+// DOM Setup
+document.addEventListener('DOMContentLoaded', () => {
+  loadStats(); // ← tambahkan ini
+  document.getElementById('btn-7x7').addEventListener('click', () => startGame(7, true));
+  document.getElementById('btn-7x7-ai').addEventListener('click', () => startGame(7, false));
+  document.getElementById('btn-13x13').addEventListener('click', () => startGame(13, true));
+  document.getElementById('btn-13x13-ai').addEventListener('click', () => startGame(13, false));
+  document.getElementById('btn-about').addEventListener('click', showAbout);
+});
