@@ -81,34 +81,35 @@
   50% { transform: scale(1.15); }
   100% { transform: scale(1); }
 }
+/* Style dasar overlay dan box */
 #about-modal {
   position: fixed;
   inset: 0;
-  z-index: 50;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  z-index: 50;
   padding: 1rem;
-  overflow-y: auto;
 }
 
-#about-box {
-  background-color: white;
+/* Box modalnya */
+#about-modal .modal-box {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
   max-width: 500px;
   width: 100%;
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   max-height: 90vh;
   overflow-y: auto;
 }
 
+/* Responsive khusus HP */
 @media (max-width: 640px) {
-  #about-box {
-    max-width: 90%;
-    font-size: 0.875rem; /* text-sm */
+  #about-modal .modal-box {
+    max-width: 90vw;
     padding: 1rem;
+    font-size: 0.95rem;
   }
 }
 
