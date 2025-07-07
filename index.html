@@ -81,6 +81,36 @@
   50% { transform: scale(1.15); }
   100% { transform: scale(1); }
 }
+#about-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+#about-box {
+  background-color: white;
+  max-width: 500px;
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+  #about-box {
+    max-width: 90%;
+    font-size: 0.875rem; /* text-sm */
+    padding: 1rem;
+  }
+}
 
 
   </style>
